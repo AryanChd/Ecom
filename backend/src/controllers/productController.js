@@ -103,5 +103,28 @@ try {
 };
 
 
+const updateProduct = async(req,res)=>{
 
-export {createProduct, getAllProduct, getProductById, deleteProductById};
+   try {
+
+     const productid = req.params.id
+     const product = req.body
+
+    const data = await productService.updateProduct(product,productid)
+
+    res.status(200).json({
+        message: "product updated sucessfully !",
+        data
+    })
+    
+   } catch (error) {
+    
+    console.log(error.message)
+    res.status(400).send(error.message)
+
+
+   }
+
+}
+
+export {createProduct, getAllProduct, getProductById, deleteProductById , updateProduct};
