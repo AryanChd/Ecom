@@ -28,7 +28,7 @@ const getAllProduct = async (query = {})=> {
 
     console.log(query.sort)
 
-    // console.log(JSON.parse(sort))
+    // console.log(JSON.parse(sort)) 
     // return sort 
     
     return await Product.find(filter).sort({sort});
