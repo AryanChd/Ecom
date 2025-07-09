@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt"
 import user from "../models/User.js"
-
+import {hashPassword} from "../utils/utility.js"
 
 
 const register = async (data) => {
 
     // return data
-    const hashedPassword = bcrypt.hashSync(data.password, 10)
+    const hashedPassword = hashPassword(data.password)
 
     // const has = $2b$10$t0s.B84ELCaGYLHUsCJFfe4DxSduGSgF1E7yXn952PIZ78C3v0HbO
 

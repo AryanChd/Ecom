@@ -4,6 +4,7 @@ import productRoutes from '../src/routes/productRoutes.js'
 import { configDotenv } from 'dotenv';
 import connectDb from './config/db.js';
 import authRoutes from '../src/routes/authRoutes.js'
+import cookieParser from 'cookie-parser'
 
 
 const app = express (); 
@@ -15,6 +16,8 @@ app.use(express.json())
 // this code is necessary for the system to understand form code 
 app.use(express.urlencoded({extended: true}))
 
+app.use(cookieParser())
+
 connectDb()
 
 app.get('/', (req,res)=> {      
@@ -23,11 +26,13 @@ app.get('/', (req,res)=> {
     })
 })
 
-app.use('/api',userRoutes);
+app.use('/api/user',userRoutes);
 
 app.use('/api/product',productRoutes);
 
 app.use('/api/auth',authRoutes);
+
+
 
 
 

@@ -1,6 +1,6 @@
 
 import authService from "../services/authService.js"
-
+import {createToken} from "../helper/token.js"
 import jwt from 'jsonwebtoken'
 
 
@@ -59,12 +59,12 @@ const login = async (req,res) => {
 
     }
 
-    const token = jwt.sign(payload,"secretkey")
+    const token = createToken(payload)
 
-    res.cookie('authToken',token)
+    res.cookie('authToken',token)   
     
     res.status(200).json({
-        message : "Login Sucessful ! " ,
+        message : "Login Sucessfull ! " ,
         data,
         token
     })
@@ -83,4 +83,5 @@ const login = async (req,res) => {
 
 
 export {register,login}
+
 
