@@ -1,10 +1,11 @@
 import express from 'express';
 import { createUser } from '../controllers/userController.js';
 import { isLoggedIn } from '../middleware/isLoggedin.js';
+import { isAdmin } from '../middleware/isAdmin.js';
 
 const router = express.Router()
 
-router.get('/',isLoggedIn, (req,res)=> {
+router.get('/',isLoggedIn,isAdmin, (req,res)=> {
 
     const user = req.user
 
