@@ -80,8 +80,32 @@ const login = async (req,res) => {
 
 }
 
+const forgetPassword = async (req,res) => {
+
+   try {
+    
+ const{email} = req.body
+    if (!email) {
+        throw new Error("Email is required !")
+    }
+
+    const data = await authService.forgetPassword({email})
+
+    res.status(200).json({
+        message: "otp send sucessfully !"
+    })
 
 
-export {register,login}
+   } catch (error) {
+
+    console.log(error.message)
+    res.status(400).send(error.message)
+    
+   }
+}
+
+
+
+export {register,login,forgetPassword}
 
 
