@@ -25,10 +25,30 @@ router.post('/forgetPassword',async (req, res) =>{
         }
         const otp = generateOtp();
 
-        const newOtp = await Otp.create({
-            email: email,
-            otp : otp,
-        });
+        const doesExist = await Otp.findOne ({ email });
+
+        let newOtp; 
+
+        if (!doesExist){
+
+            newOtp = await Otp.create({
+                email: email,
+                 otp : otp,
+            });
+        } else {
+
+            newOtp = await Otp.findOneAndUpdate(
+                { email },
+                {
+                otp: otp,
+                createdAt: new Date(),
+                },
+                { new : true }
+            )
+
+        }
+
+        
         sendMail (email,otp);
 
         res.send (newOtp);
