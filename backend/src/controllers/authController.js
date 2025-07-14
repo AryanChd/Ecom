@@ -1,111 +1,105 @@
+import authService from "../services/authService.js";
+import { createToken } from "../helper/token.js";
 
-import authService from "../services/authService.js"
-import {createToken} from "../helper/token.js"
-import jwt from 'jsonwebtoken'
+const register = async (req, res) => {
+  try {
+    const { email, phone, name, password, confirmPassword } = req.body;
 
-
-
-const register = async (req,res) => {
-
-    try {
-
-        const {email,phone,password,confirmPassword,name}= req.body
-
-    if (!password || !email || !phone || !confirmPassword || !name){
-        return res.status(400).json({message:"User credentials missing ! " })
+    if (!password || !email || !phone || !confirmPassword || !name) {
+      return res.status(400).json({ message: "User credential is missing." });
     }
 
-    if (password !== confirmPassword) {return res.status(400).json({message : "Password did not matched !"})}
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        message: "Password and confirm password does not match.",
+      });
+    }
 
-    const data =  await authService.register({email,phone,password,name})
-
-
+    const data = await authService.register({
+      email: email,
+      phone: phone,
+      name: name,
+      password: password,
+    });
 
     res.status(200).json({
-        message: "User Registered Sucessfully !",
-        data
-    })
+      message: "User registered successful",
+      data,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      message: "Error occured to register",
+      error: error.message,
+    });
+  }
+};
 
-    } catch (error) {
-        
-        console.log(error.message)
-        res.status(500).json({
-            message : " Error occured while registering !",
-            error: error.message
-        })
+const login = async (req, res) => {
+  try {
+    //login function
+    const { email, password } = req.body;
 
+    if (!email || !password) {
+      throw new Error("User credential is missing.");
     }
 
-}
-
-
-const login = async (req,res) => { 
-
-    try {
-
-        const {email,password} = req.body 
-
-    if (!email || !password) { throw new Error ("user credintial missing")}
-
-    const data  = await authService.login({email,password})
+    const data = await authService.login({ email, password });
 
     const payload = {
+      id: data._id,
+      userName: data.userName,
+      role: data.role,
+      phone: data.phone,
+      email: data.email,
+    };
 
-        id: data._id,
-        name: data.name,
-        role: data.role,
-        phone: data.phone,
-        email: data.email
+    //Webtoken generation
+    // const token = jwt.sign(payload, "secretkey")
+    const token = createToken(payload);
+    res.cookie("authToken", token);
 
-    }
-
-    const token = createToken(payload)
-
-    res.cookie('authToken',token)   
-    
     res.status(200).json({
-        message : "Login Sucessfull ! " ,
-        data,
-        token
-    })
-
-        
-    } catch (error) {
-
-        console.log(error.message) 
-        res.status(400).send(error.message) 
-        
-    }
+      message: "Login successful",
+      data,
+      token,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).send(error.message);
+  }
+};
 
 
-}
-
-const forgetPassword = async (req,res) => {
-
-   try {
-    
- const{email} = req.body
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
     if (!email) {
-        throw new Error("Email is required !")
+      throw new Error("Email is required");
     }
 
-    const data = await authService.forgetPassword({email})
+    const data = await authService.forgotPassword({email})
+    res.send(data);
+  } catch (error) {
+    console.log(error.message);
+    res.send(error.message);
+  }
+};
 
-    res.status(200).json({
-        message: "otp send sucessfully !"
-    })
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
 
+    if (!email || !otp){
+        throw new Error(" Email and Otp required ! ")
+    }
 
-   } catch (error) {
+    const data = await authService.verifyOtp({ email, otp });
+    res.status(200).json({ data });
+  } catch (error) {
+    console.log(error.message);
+    res.send(error.message);
+  }
+};
 
-    console.log(error.message)
-    res.status(400).send(error.message)
-    
-   }
-}
-
-
-
-export {register,login,forgetPassword}
-
-
+export { register, login, forgotPassword, verifyOtp };
