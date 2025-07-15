@@ -74,6 +74,8 @@ const login = async (req, res) => {
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+
+    res.cookie("userEmail",email)
     if (!email) {
       throw new Error("Email is required");
     }
@@ -88,7 +90,9 @@ const forgotPassword = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+
+    const { otp } = req.body;
+    const email = req.cookies.userEmail;
 
     if (!email || !otp){
         throw new Error(" Email and Otp required ! ")
