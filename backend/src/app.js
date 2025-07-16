@@ -5,6 +5,7 @@ import { configDotenv } from 'dotenv';
 import connectDb from './config/db.js';
 import authRoutes from '../src/routes/authRoutes.js'
 import cookieParser from 'cookie-parser'
+import constant from './config/constant.js';
 
 
 const app = express (); 
@@ -37,7 +38,7 @@ app.use('/api/auth',authRoutes);
 
 
 
-const port = process.env.PORT
+const port = constant.PORT
 
 app.listen(3000,()=>{
     console.log("port started at 3000")

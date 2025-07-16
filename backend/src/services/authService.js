@@ -73,7 +73,7 @@ const forgotPassword = async (data) => {
     );
   }
 
-  // sendMail(data.email, otp);
+  sendMail(data.email, otp);
 
   return newOtp;
   
