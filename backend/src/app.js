@@ -6,6 +6,7 @@ import connectDb from './config/db.js';
 import authRoutes from '../src/routes/authRoutes.js'
 import cookieParser from 'cookie-parser'
 import constant from './config/constant.js';
+import cors from "cors"
 
 
 const app = express (); 
@@ -20,6 +21,11 @@ app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 
 connectDb()
+
+app.use(cors({
+    origin:"",
+    credentials:true
+}))
 
 app.get('/', (req,res)=> {      
     res.status(200).json({

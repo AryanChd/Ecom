@@ -36,7 +36,4 @@ const sendMail = async (email, otp) => {
   });
 };
 
-
-
-
 export { sendMail };
