@@ -10,15 +10,15 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <BrowserRouter>
-      <Navbar/>
-      
+      <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/forgot-password" element={<ResetPassword />} />
-        <Route path="/reset-password" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );
