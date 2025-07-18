@@ -1,11 +1,44 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    console.log(email, password)
+
+try {
+  
+  const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({  email, password,  }),
+        credentials: "include"
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.message || "Login successful!");
+        navigate("/"); // Redirect to home page
+      } else {
+        setError(data.message || "Login failed.");
+      }
+
+} catch (error) {
+
+  setError("An error occurred. Please try again.");
+  
+}
     // Add your login logic here
   };
   return (
@@ -18,7 +51,7 @@ export const Login = () => {
               Please enter your details to sign in
             </p>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <label
@@ -115,6 +148,8 @@ export const Login = () => {
               </div>
             </div>
           </form>
+          {message && <div className="mt-4 text-green-600">{message}</div>}
+          {error && <div className="mt-4 text-red-600">{error}</div>}
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
