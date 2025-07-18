@@ -23,7 +23,7 @@ app.use(cookieParser())
 connectDb()
 
 app.use(cors({
-    origin:"",
+    origin:"http://localhost:5174",
     credentials:true
 }))
 
@@ -38,8 +38,6 @@ app.use('/api/user',userRoutes);
 app.use('/api/product',productRoutes);
 
 app.use('/api/auth',authRoutes);
-
-
 
 
 
