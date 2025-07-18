@@ -72,7 +72,7 @@ export const Register = () => {
           <span className="text-sm text-gray-600">
             Already have an account?{' '}
           </span>
-          <a href="#" className="font-medium text-blue-600 hover:text-blue-500 ml-1">
+          <a href="/login" className="font-medium text-blue-600 hover:text-blue-500 ml-1">
             Login
           </a>
         </div>
