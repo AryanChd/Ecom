@@ -1,13 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-
 import { Login } from "./auth/Login";
 import Register from "./auth/Register";
 import { VerifyOtp } from "./auth/VerifyOtp";
 import { ForgotPassword } from "./auth/ForgotPassword";
 import { ResetPassword } from "./auth/ResetPassword";
 import Home from "./pages/Home.jsx"; 
-
 import Navbar from "./components/Navbar";
 
 
