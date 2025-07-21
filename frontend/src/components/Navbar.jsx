@@ -11,7 +11,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <Link to="/" className="text-teal-600 font-bold text-lg">
-              LOGO
+              LaptopVerse
             </Link>
           </div>
 
@@ -20,13 +20,13 @@ const Navbar = () => {
             <Link to="/" className="hover:text-teal-600">
               Home
             </Link>
-            <Link to="#" className="hover:text-teal-600">
+            <Link to="/product" className="hover:text-teal-600">
               Products
             </Link>
-            <Link to="#" className="hover:text-teal-600">
+            <Link to="/about-us" className="hover:text-teal-600">
               About Us
             </Link>
-            <Link to="#" className="hover:text-teal-600">
+            <Link to="/contact-us" className="hover:text-teal-600">
               Contact Us
             </Link>
           </nav>

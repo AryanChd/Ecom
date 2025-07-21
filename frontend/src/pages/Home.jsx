@@ -11,7 +11,7 @@ const Home = () => {
       .get(`${API_URL}/getAllProduct`)
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err));
-  }, []); 
+  }, []);
 
   return (
     <div className="font-sans">
@@ -64,11 +64,6 @@ const Home = () => {
           Contact Us
         </button>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-6 text-center text-sm">
-        © {new Date().getFullYear()} Aryan's Laptop Store. All rights reserved.
-      </footer>
     </div>
   );
 };
