@@ -1,35 +1,47 @@
 import authService from "../services/authService.js";
 import { createToken } from "../helper/token.js";
+import User from "../models/User.js";
 
 const register = async (req, res) => {
   try {
     const { email, phone, name, password, confirmPassword } = req.body;
 
+    // Basic validation
     if (!password || !email || !phone || !confirmPassword || !name) {
-      return res.status(400).json({ message: "User credential is missing." });
+      return res.status(400).json({ message: "⚠️ All fields are required." });
     }
 
     if (password !== confirmPassword) {
       return res.status(400).json({
-        message: "Password and confirm password does not match.",
+        message: "⚠️ Password and Confirm Password do not match.",
       });
     }
 
+    // 🛑 Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "⚠️ Email already exists. Please try logging in.",
+      });
+    }
+
+    // ✅ Call service to register user
     const data = await authService.register({
-      email: email,
-      phone: phone,
-      name: name,
-      password: password,
+      email,
+      phone,
+      name,
+      password,
     });
 
+    // 🎉 Success
     res.status(200).json({
-      message: "User registered successful",
+      message: "🎉 User registered successfully.",
       data,
     });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({
-      message: "Error occured to register",
+      message: "❌ Error occurred during registration.",
       error: error.message,
     });
   }
@@ -70,17 +82,16 @@ const login = async (req, res) => {
   }
 };
 
-
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    res.cookie("userEmail",email)
+    res.cookie("userEmail", email);
     if (!email) {
       throw new Error("Email is required");
     }
 
-    const data = await authService.forgotPassword({email})
+    const data = await authService.forgotPassword({ email });
     res.send(data);
   } catch (error) {
     console.log(error.message);
@@ -90,12 +101,11 @@ const forgotPassword = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-
     const { otp } = req.body;
     const email = req.cookies.userEmail;
 
-    if (!email || !otp){
-        throw new Error(" Email and Otp required ! ")
+    if (!email || !otp) {
+      throw new Error(" Email and Otp required ! ");
     }
 
     const data = await authService.verifyOtp({ email, otp });

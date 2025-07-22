@@ -1,40 +1,27 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../components/TextField";
+import Cookies from "js-cookie";
 import registerField from "../components/registerField";
 import axios from "axios";
+import { registerInitialValue } from "../config/constant.js";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  useEffect(()=>{
-    const handleSaveCookie = async ()=>{
-      try {
-      
-        await axios.get ("http://localhost:3000/test",{
-          withCredentials: true,
-        });
-      } catch (error) {
-        console.log(error)
-        
-      }
-
-    }
-    handleSaveCookie();
-
-  }, []
-)
-
+  const [formData, setFormData] = useState(registerInitialValue);
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const handleSaveCookie = async () => {
+    Cookies.set("name", "Prabesh");
+  };
+
+  const handleClearCookie = async () => {
+    Cookies.remove("name");
+  };
+
+  const name = Cookies.get("name");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,13 +56,7 @@ const Register = () => {
       );
 
       setMessage(response.data.message || "🎉 Registration successful!");
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
+      setFormData(registerInitialValue);
     } catch (error) {
       setError(
         error.response?.data?.message ||
@@ -135,3 +116,23 @@ const Register = () => {
 };
 
 export default Register;
+
+<div className="flex justify-center mt-6 space-x-4">
+  <button
+    onClick={handleSaveCookie}
+    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
+    type="button"
+  >
+    Save Cookie
+  </button>
+  <button
+    onClick={handleClearCookie}
+    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
+    type="button"
+  >
+    Clear Cookie
+  </button>
+  <span className="ml-4 text-gray-700 flex items-center">
+    {name ? `Cookie: ${name}` : "No Cookie"}
+  </span>
+</div>;
