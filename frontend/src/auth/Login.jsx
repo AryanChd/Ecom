@@ -1,46 +1,50 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import handlePostOperation from "../config/handlePostOperation.js";
+
 
 export const Login = () => {
+  const initialValue = {
+    email: "",
+    password: "",
+  };
   const [showPassword, setShowPassword] = useState(false);
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialValue);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setMessage("");
     setError("");
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    console.log(email, password)
 
-try {
-  
-  const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({  email, password,  }),
-        credentials: "include"
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setMessage(data.message || "Login successful!");
-        navigate("/"); // Redirect to home page
+    try {
+      // Calling the handlePostOperation function with formData
+      const response = await handlePostOperation("/api/auth/login", formData);
+      console.log(response); // optional, can be removed in production
+      if (response.status === 200) {
+        // Checking the response status
+        setMessage(response.message || "Login successful!");
+        setFormData(initialValue); // Resetting form data after successful login
+        navigate("/"); // Navigate to the home page or desired route
       } else {
-        setError(data.message || "Login failed.");
+        setError(response.message || "Login failed!");
       }
-
-} catch (error) {
-
-  setError("An error occurred. Please try again.");
-  
-}
-    // Add your login logic here
+    } catch (err) {
+      console.error(err.message);
+      setError(err.message || "An error occurred during login!");
+    }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <>
@@ -76,6 +80,8 @@ try {
                     id="email"
                     name="email"
                     type="email"
+                    value={formData.email} // This binds the input to formData
+                    onChange={handleChange} // This will update formData when the value changes
                     autoComplete="email"
                     required
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -116,7 +122,9 @@ try {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"} // Toggling password visibility
+                    value={formData.password} // This binds the input to formData
+                    onChange={handleChange} // This will update formData when the value changes
                     autoComplete="current-password"
                     required
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -148,8 +156,12 @@ try {
               </div>
             </div>
           </form>
-          {message && <div className="mt-4 text-green-600">{message}</div>}
-          {error && <div className="mt-4 text-red-600">{error}</div>}
+          {message && (
+            <div className="mt-4 text-green-600 text-center">{message}</div>
+          )}
+          {error && (
+            <div className="mt-4 text-red-600 text-center">{error}</div>
+          )}
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

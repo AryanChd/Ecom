@@ -4,24 +4,51 @@ import Cookies from "js-cookie";
 import registerField from "../components/registerField";
 import axios from "axios";
 import { registerInitialValue } from "../config/constant.js";
+import handlePostOperation from "../config/handlePostOperation.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Register = () => {
   const [formData, setFormData] = useState(registerInitialValue);
+  const [name, setName] = useState(
+    JSON.parse(localStorage.getItem("name")) || ""
+  );
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [cookieName, setCookieName] = useState("");
 
-  const handleSaveCookie = async () => {
-    Cookies.set("name", "Prabesh");
+  // localStorage.setItem("name","Aryan")
+  // localStorage.getItemItem("name")
+  // localStorage.removeItemItem("name")
+  // localStorage.clear()
+
+  useEffect(() => {
+    setName(JSON.parse(localStorage.getItem("name")) || "");
+    // Simulate storing auth info on load (for testing)
+    localStorage.setItem("authToken", "123456ggg");
+    localStorage.setItem("email", "Aryan@gmail.com");
+
+    // Read cookie value
+    const nameFromCookie = Cookies.get("name");
+    setCookieName(nameFromCookie || "");
+  }, []);
+
+  const handleSaveCookie = () => {
+    // Cookies.set("name", "Aryan");
+    setName(localStorage.setItem("name", JSON.stringify({ name: "Aryan" })));
+    setCookieName("Aryan");
   };
 
-  const handleClearCookie = async () => {
-    Cookies.remove("name");
+  const handleClearCookie = () => {
+    // Cookies.remove("name");
+    localStorage.removeItem("name");
+    setCookieName("");
   };
 
-  const name = Cookies.get("name");
+  const clearall = () => {
+    localStorage.clear();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,23 +72,11 @@ const Register = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${API_URL}/api/auth/register`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      setMessage(response.data.message || "🎉 Registration successful!");
+      const data = await handlePostOperation("/api/auth/register", formData);
+      setMessage(data.message || "🎉 Registration successful!");
       setFormData(registerInitialValue);
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "❌ Something went wrong. Please try again."
-      );
+      setError(error.message);
     }
   };
 
@@ -71,7 +86,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Create Your Account
@@ -111,28 +126,36 @@ const Register = () => {
           </div>
         )}
       </div>
+
+      {/* Cookie buttons and display */}
+      <div className="flex justify-center mt-6 space-x-4">
+        <button
+          onClick={handleSaveCookie}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
+          type="button"
+        >
+          Save Cookie
+        </button>
+        <button
+          onClick={handleClearCookie}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
+          type="button"
+        >
+          Clear Cookie
+        </button>
+        <button
+          onClick={clearall}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
+          type="button"
+        >
+          Clear all
+        </button>
+        <span className="ml-4 text-gray-700 flex items-center">
+          {cookieName ? `Cookie: ${cookieName}` : null}
+        </span>
+      </div>
     </div>
   );
 };
 
 export default Register;
-
-<div className="flex justify-center mt-6 space-x-4">
-  <button
-    onClick={handleSaveCookie}
-    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
-    type="button"
-  >
-    Save Cookie
-  </button>
-  <button
-    onClick={handleClearCookie}
-    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300"
-    type="button"
-  >
-    Clear Cookie
-  </button>
-  <span className="ml-4 text-gray-700 flex items-center">
-    {name ? `Cookie: ${name}` : "No Cookie"}
-  </span>
-</div>;
