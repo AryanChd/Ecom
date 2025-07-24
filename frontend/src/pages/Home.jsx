@@ -61,6 +61,7 @@ const Home = () => {
           Talk to our experts and get personalized recommendations!
         </p>
         <button className="bg-yellow-400 text-black px-6 py-3 rounded-full hover:bg-yellow-500 transition">
+          
           Contact Us
         </button>
       </section>
