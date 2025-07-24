@@ -8,4 +8,9 @@ const registerInitialValue = {
   confirmPassword: "",
 };
 
-export { registerInitialValue };
+ const initialValue = {
+    email: "",
+    password: "",
+  };
+
+export { registerInitialValue , initialValue};
