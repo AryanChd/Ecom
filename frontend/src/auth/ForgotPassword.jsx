@@ -1,6 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import handlePostOperation from "../config/handlePostOperation";
+import { useNavigate } from "react-router-dom";
+import TextField from "../components/TextField.jsx";
 
 export const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Create formData object with the current email value
+    const formData = { email };
+
+    try {
+      const response = await handlePostOperation(
+        "/api/auth/forgotPassword",
+        formData
+      );
+
+      console.log(response);
+
+      // Since handlePostOperation returns response.data on success
+      alert(response.message || "OTP Sent !");
+      localStorage.setItem("email", email);
+
+      setTimeout(() => {
+        navigate("/verify-otp");
+      }, 1500);
+
+      // Clear email after navigation is set
+      setEmail("");
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.message || "Error Sending OTP !!");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <main id="content" role="main" className="w-full max-w-md mx-auto p-6">
@@ -21,32 +58,19 @@ export const ForgotPassword = () => {
               </p>
             </div>
             <div className="mt-5">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="grid gap-y-4">
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-bold ml-1 mb-2 text-gray-800"
-                    >
-                      Email address
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
-                        required
-                        aria-describedby="email-error"
-                      />
-                    </div>
-                    <p
-                      className="hidden text-xs text-red-600 mt-2"
-                      id="email-error"
-                    >
-                      Please include a valid email address so we can get back to you
-                    </p>
-                  </div>
+                  <TextField
+                    label="Email address"
+                    id="email"
+                    name="email"
+                    type="email"
+                    required={true}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                  />
+
                   <button
                     type="submit"
                     className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
