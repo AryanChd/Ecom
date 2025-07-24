@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = async (email, otp) => {
   await transporter.sendMail({
-    from: `"Aryan Chaudhary 👨‍💻" <${constant.EMAIL_USER}>`,
+    from: `"Admin 👨‍💻" <${constant.EMAIL_USER}>`,
     to: email,
     subject: "🔐 Your OTP Code for Password Reset",
     text: `Your OTP is: ${otp}`,

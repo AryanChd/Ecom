@@ -92,7 +92,7 @@ const verifyOtp = async ({ email, otp }) => {
 
   await User.findOneAndUpdate(
     { email },
-    { otpExpiresAt: new Date (Date.now () +30 * 1000)},
+    { otpExpiresAt: new Date (Date.now () + 60 * 1000)},
     {new: true}
 
   );
