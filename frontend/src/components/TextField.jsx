@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react"; 
-
+import { Eye, EyeOff } from "lucide-react";
 
 const TextField = ({
   label = "TextField",
@@ -12,10 +10,12 @@ const TextField = ({
   value,
   required = false,
   type = "text",
+  autoFocusOn = "email",
+  maxLength = 40,
 }) => {
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const isPassword = type === "password";
+  const isPassword = type === "password";
 
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
@@ -25,16 +25,21 @@ const TextField = ({
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-medium text-gray-700">
         {label}
+        {required && "*"}
       </label>
       <div className="relative">
         <input
+          inputMode={type === "number" ? "numeric" : "text"}
           id={id}
-          name = {name}
+          name={name}
+          pattern={type === "number" && "d*"}
           type={isPassword && showPassword ? "text" : type}
           value={value}
           onChange={onChange}
           required={required}
+          autoFocus={id === autoFocusOn}
           placeholder={placeholder}
+          maxLength={maxLength}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         {isPassword && (
@@ -52,4 +57,3 @@ const TextField = ({
 };
 
 export default TextField;
-
