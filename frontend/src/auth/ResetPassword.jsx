@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import handlePostOperation from "../config/handlePostOperation";
 import { useNavigate } from "react-router-dom";
@@ -55,6 +55,15 @@ const ResetPassword = () => {
     }
   };
 
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    const isOtpVerified = localStorage.getItem("isOtpVerified");
+    if (!email || !isOtpVerified) {
+      // alert("No email found. Please request a new OTP.");
+      navigate("/verify-otp");
+    }
+  }, []);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import handlePostOperation from "../config/handlePostOperation";
+import { handleGetOperation } from "../config/handleGetOperation";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -92,6 +93,7 @@ const VerifyOtp = () => {
       setTimeout(() => {
         navigate("/reset-password");
       }, 1500);
+      
     } else {
       // Fixed error handling - check if nested properties exist before accessing
       const errorMessage =
@@ -111,6 +113,31 @@ const VerifyOtp = () => {
     setTimeLeft(300); // Reset timer
     alert("OTP has been resent to your email");
   };
+
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (!email) {
+      navigate("/forgotPassword");
+    }
+
+    const checkAuth = async () => {
+      const response = await handleGetOperation("/api/auth/verify/2");
+      // setLoading(true);
+
+      console.log(response);
+
+      if (response.status === 200) {
+        toast.success(response.response.data.message || "Success");
+        // setLoading(false);
+      } else {
+        toast.error(response.response.data.error || "Fail!");
+        navigate(-1);
+        // setLoading(false)
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -277,3 +304,5 @@ const VerifyOtp = () => {
 };
 
 export default VerifyOtp;
+
+
