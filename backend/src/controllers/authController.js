@@ -86,7 +86,11 @@ const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    res.cookie("userEmail", email);
+    res.cookie("userEmail", email, {
+      maxAge: 5 * 60 * 1000,
+      httpOnly: true,
+    });
+
     if (!email) {
       throw new Error("Email is required");
     }
@@ -95,7 +99,7 @@ const forgotPassword = async (req, res) => {
     res.send(data);
   } catch (error) {
     console.log(error.message);
-    res.send(error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
