@@ -11,11 +11,13 @@ import { AboutUs } from "./pages/AboutUs.jsx";
 import { Product } from "./pages/Product.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import Footer from "./components/Footer.jsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
+     <Toaster position="top-right" />
 
       <Routes>
         <Route path="/" element={<Home />} />
