@@ -25,21 +25,28 @@ app.use(cors({
 
 app.get("/test", (req, res) => {
   res.cookie("name", "name", {
-    maxAge: 10 * 1000, // 10 seconds
+    maxAge: 10 * 60 * 1000,
     httpOnly: true,
   });
-
-  res.status(200).send(`
-    <b>
-      <a style="color: blue; text-decoration: none;" href="#">Test Link</a>
-    </b>
-  `);
+  res
+    .status(200)
+    .send(
+      "<b><a style='color: white; background: black; padding: 2px'>Hello</a>, Welcome to my app!</b>"
+    );
 });
 
 app.get('/', (req, res) => {      
   res.status(200).json({
     message: 'Heroo'
   });
+});
+
+app.get("/api/clear-cookie", (req, res) => {
+  res.clearCookie("name", {
+    maxAge: 10 * 60 * 1000,
+    httpOnly: true,
+  });
+  res.status(200).send("cookie cleared");
 });
 
 app.use('/api/user', userRoutes);
