@@ -29,6 +29,17 @@ const Navbar = () => {
             <Link to="/contact-us" className="hover:text-teal-600">
               Contact Us
             </Link>
+
+            {/* ✅ Newly added links */}
+            <Link to="/page-a" className="hover:text-teal-600">
+              Page A
+            </Link>
+            <Link to="/page-b" className="hover:text-teal-600">
+              Page B
+            </Link>
+            <Link to="/page-c" className="hover:text-teal-600">
+              Page C
+            </Link>
           </nav>
 
           {/* Auth Buttons */}
@@ -86,15 +97,45 @@ const Navbar = () => {
             <Link to="/" className="block px-4 py-2 rounded hover:bg-gray-100">
               Home
             </Link>
-            <Link to="#" className="block px-4 py-2 rounded hover:bg-gray-100">
+            <Link
+              to="/product"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
               Products
             </Link>
-            <Link to="#" className="block px-4 py-2 rounded hover:bg-gray-100">
+            <Link
+              to="/about-us"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
               About Us
             </Link>
-            <Link to="#" className="block px-4 py-2 rounded hover:bg-gray-100">
+            <Link
+              to="/contact-us"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
               Contact Us
             </Link>
+
+            {/* ✅ Newly added mobile links */}
+            <Link
+              to="/page-a"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
+              Page A
+            </Link>
+            <Link
+              to="/page-b"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
+              Page B
+            </Link>
+            <Link
+              to="/page-c"
+              className="block px-4 py-2 rounded hover:bg-gray-100"
+            >
+              Page C
+            </Link>
+
             <Link
               to="/login"
               className="block px-4 py-2 rounded text-white bg-teal-600"
