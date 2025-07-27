@@ -1,26 +1,27 @@
+// 📦 External Imports
 import express from "express";
+import bcrypt from "bcrypt";
+
+// 🧩 Internal Imports
 import {
-  forgotPassword,
   register,
+  login,
+  forgotPassword,
   verifyOtp,
 } from "../controllers/authController.js";
-import { login } from "../controllers/authController.js";
-
-import bcrypt from "bcrypt";
 import User from "../models/User.js";
-import { verifyToken } from "../helper/token.js";
 import Otp from "../models/Otp.js";
+import { verifyToken } from "../helper/token.js";
 
 const router = express.Router();
 
+// 🛣️ Auth Routes
 router.post("/register", register);
-
 router.post("/login", login);
-
 router.post("/forgotPassword", forgotPassword);
-
 router.post("/verify-otp", verifyOtp);
 
+// 🔐 Reset Password
 router.post("/reset-password", async (req, res) => {
   try {
     console.log("Cookies:", req.cookies);
@@ -28,7 +29,7 @@ router.post("/reset-password", async (req, res) => {
     const email = req.cookies.userEmail;
 
     if (!email || !password) {
-      throw new Error(" Time to reset password is expired :( ");
+      throw new Error("Time to reset password is expired :( ");
     }
 
     const doesUserExist = await User.findOne({ email });
@@ -37,10 +38,7 @@ router.post("/reset-password", async (req, res) => {
       throw new Error("User not registered!");
     }
 
-    if (
-      !doesUserExist.otpExpiresAt ||
-      doesUserExist.otpExpiresAt < new Date()
-    ) {
+    if (!doesUserExist.otpExpiresAt || doesUserExist.otpExpiresAt < new Date()) {
       throw new Error("Please verify OTP first 😊");
     }
 
@@ -64,56 +62,49 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+// 🔎 Utility: Get All OTPs
 router.get("/get-all-otps", async (req, res) => {
   try {
     const data = await Otp.find();
-    res.json({ message: "Otps fetched sucessfully!", data });
+    res.json({ message: "OTPs fetched successfully!", data });
   } catch (error) {
     console.log(error.message);
-    res.send(error.message);
+    res.status(500).send(error.message);
   }
 });
 
+// ✅ Verification Steps (1 = Token, 2 = Email, 3 = OTP)
 router.get("/verify/:step", async (req, res) => {
   try {
     const { step } = req.params;
     const userEmail = req.cookies.userEmail;
     const authToken = req.cookies.authToken;
 
-    if (step == "1") {
-      if (!authToken) {
-        throw new Error(" Please Login First !!");
-      }
-
+    if (step === "1") {
+      if (!authToken) throw new Error("Please login first!");
       const isValid = verifyToken(authToken);
-
       if (!isValid) {
         res.clearCookie("authToken");
-        throw new Error("Token Expired !!");
+        throw new Error("Token expired!");
       }
     }
 
-    if (step == "2") {
-      if (!userEmail) {
-        throw new Error("Please send forgot password request first !!");
-      }
+    if (step === "2") {
+      if (!userEmail) throw new Error("Please send forgot password request first!");
       const isUserValid = await User.findOne({ email: userEmail });
+      if (!isUserValid) throw new Error("User not registered!");
+    }
 
-      if (!isUserValid) {
-        throw new Error("User not registered!");
+    if (step === "3") {
+      const isOtpVerified = await Otp.findOne({ email: userEmail });
+      if (!isOtpVerified || new Date() > isOtpVerified.otpExpiresAt) {
+        throw new Error("Please verify OTP first!");
       }
     }
 
-    if (step == "3") {
-      const isOtpVerified = await Otp.findOne({ email });
-
-      if (new Date() > isOtpVerified.otpExpiresAt) {
-        throw new Error("Please Verify OTP First !!");
-      }
-    }
     res.status(200).json({ message: `Verification step ${step} passed!` });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({ error: error.message });
   }
 });
