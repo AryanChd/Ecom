@@ -28,6 +28,7 @@ const Home = () => {
           );
         } else {
           toast.error(response.response.data.error || "Please Login First!!");
+          toast.error("Please Login First !! ");
           navigate("/login");
         }
       } catch (error) {
@@ -42,7 +43,7 @@ const Home = () => {
     checkAuth();
   }, [navigate]);
 
-  return <div>{loading ? "Checking authentication..." : "I am home"}</div>;
+  return <div>home</div>;
 };
 
 export default Home;
