@@ -18,6 +18,9 @@ const productSchema = new mongoose.Schema(
       type: String, // You can store Cloudinary URL, S3 URL, or local path
 
     },
+    imagePath:{
+      type: String,
+    },
     ram: {
       type: String,
     },
