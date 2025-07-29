@@ -5,7 +5,6 @@ const productSchema = new mongoose.Schema(
     productName: {
       type: String,
       required: true,
-    
     },
     price: {
       type: Number,
@@ -16,9 +15,8 @@ const productSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String, // You can store Cloudinary URL, S3 URL, or local path
-
     },
-    imagePath:{
+    imageName: {
       type: String,
     },
     ram: {
@@ -41,12 +39,7 @@ const productSchema = new mongoose.Schema(
     },
     use: {
       type: String,
-      enum: ['GAMING',
-        'PROFESSIONAL',
-        'STUDENT',
-        'PERFORMANCE',
-        'BUDGET',
-      ]
+      enum: ["GAMING", "PROFESSIONAL", "STUDENT", "PERFORMANCE", "BUDGET"],
     },
     stock: {
       type: Number,
@@ -54,8 +47,7 @@ const productSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      default: true
-
+      default: true,
     },
     featured: {
       type: Boolean,
@@ -63,8 +55,8 @@ const productSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   {
     timestamps: true,
