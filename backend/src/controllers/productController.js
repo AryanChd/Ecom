@@ -94,12 +94,19 @@ const deleteProductById = async (req, res) => {
   }
 };
 
-const updateProduct = async (req, res) => {
+const updateProductById = async (req, res) => {
   try {
+    if (req.file) {
+      const newFilePath = req.file.path;
+      const newFileName = req.file.filename;
+      req.body.imageName = newFileName;
+      req.body.imagePath = newFilePath;
+    }
+
     const productid = req.params.id;
     const product = req.body;
 
-    const data = await productService.updateProduct(product, productid);
+    const data = await productService.updateProductById(product, productid);
 
     res.status(200).json({
       message: "product updated sucessfully !",
@@ -116,5 +123,5 @@ export {
   getAllProduct,
   getProductById,
   deleteProductById,
-  updateProduct,
+  updateProductById,
 };
