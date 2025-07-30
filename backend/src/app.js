@@ -1,16 +1,17 @@
-import express from 'express';
-import userRoutes from '../src/routes/userRoutes.js';
-import productRoutes from '../src/routes/productRoutes.js';
-import authRoutes from '../src/routes/authRoutes.js';
-import { configDotenv } from 'dotenv';
-import connectDb from './config/db.js';
-import cookieParser from 'cookie-parser';
-import constant from './config/constant.js';
+import express from "express";
+import userRoutes from "../src/routes/userRoutes.js";
+import productRoutes from "../src/routes/productRoutes.js";
+import authRoutes from "../src/routes/authRoutes.js";
+import orderRoutes from "../src/routes/orderRoutes.js";
+import { configDotenv } from "dotenv";
+import connectDb from "./config/db.js";
+import cookieParser from "cookie-parser";
+import constant from "./config/constant.js";
 import cors from "cors";
 
-const app = express(); 
+const app = express();
 
-configDotenv(); 
+configDotenv();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,10 +19,12 @@ app.use(cookieParser());
 
 connectDb();
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.get("/test", (req, res) => {
   res.cookie("name", "name", {
@@ -35,9 +38,9 @@ app.get("/test", (req, res) => {
     );
 });
 
-app.get('/', (req, res) => {      
+app.get("/", (req, res) => {
   res.status(200).json({
-    message: 'Heroo'
+    message: "Heroo",
   });
 });
 
@@ -49,9 +52,10 @@ app.get("/api/clear-cookie", (req, res) => {
   res.status(200).send("cookie cleared");
 });
 
-app.use('/api/user', userRoutes);
-app.use('/api/product', productRoutes);
-app.use('/api/auth', authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/product", productRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/order", orderRoutes);
 
 // 404 route
 app.use((req, res) => {
