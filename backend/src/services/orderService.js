@@ -33,10 +33,21 @@ const updatePaymentStatus = async (id, status) => {
   );
 };
 
+const updateKhaltiPaymentStatus = async(pidx, totalAmount, userId) => {
+  const order = await order.findOne({pidx});
+  if (!order) {throw new Error ("No order found")}
+  if (order.totalAmount !== totalAmount){throw new Error("Some error occured warning !!")}
+  if (order.user !== userId) {throw new Error ("Invalid Operation")}
+
+  const result = await order.findOneAndUpdate({pidx}, {paymentStatus : "COMPLETED"})
+
+}
+
 export default {
   createOrder,
   getOrderById,
   getOrderByUserId,
   updateOrderStatus,
   updatePaymentStatus,
+  updateKhaltiPaymentStatus
 };
