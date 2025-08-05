@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import React from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export const orderSchema = new mongoose.Schema({
   user: {
@@ -10,7 +10,7 @@ export const orderSchema = new mongoose.Schema({
   },
   orderNumber: {
     type: String,
-    default: () => uuidv4()
+    default: () => uuidv4(),
   },
   cartItems: {
     type: [
@@ -40,6 +40,9 @@ export const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     enum: ["cod", "khalti"],
+  },
+  pidx: {
+    type: String,
   },
 });
 
