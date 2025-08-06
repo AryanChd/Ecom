@@ -1,4 +1,5 @@
 import Order from "../models/order.js";
+import axios from "axios";
 
 const createOrder = async (order) => {
   const data = await Order.create(order);
@@ -33,15 +34,34 @@ const updatePaymentStatus = async (id, status) => {
   );
 };
 
-const updateKhaltiPaymentStatus = async(pidx, totalAmount, userId) => {
-  const order = await order.findOne({pidx});
-  if (!order) {throw new Error ("No order found")}
-  if (order.totalAmount !== totalAmount){throw new Error("Some error occured warning !!")}
-  if (order.user !== userId) {throw new Error ("Invalid Operation")}
+const updateKhaltiPaymentStatus = async (pidx, totalAmount, userId) => {
+  const order = await Order.findOne({ pidx });
+  if (!order) throw new Error("No order found");
 
-  const result = await order.findOneAndUpdate({pidx}, {paymentStatus : "COMPLETED"})
+  console.log(order.totalAmount);
 
-}
+  if (order.totalAmount !== totalAmount)
+    throw new Error("Some error occured warning !! ");
+
+  const lookupResult = await axios.post(
+    "https://dev.khalti.com/api/v2/epayment/lookup/",
+    { pidx },
+    {
+      headers: {
+        Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  console.log(lookupResult);
+
+  if (lookupResult.data.status !== "Completed")
+    throw new Error("Payment is not completed !!");
+  if (lookupResult.data.total_amount !== order.totalAmount * 100)
+    throw new Error("Amount didn't match !!");
+
+  return await Order.findOneAndUpdate({ pidx }, { paymentStatus: "COMPLETED" });
+};
 
 export default {
   createOrder,
@@ -49,5 +69,5 @@ export default {
   getOrderByUserId,
   updateOrderStatus,
   updatePaymentStatus,
-  updateKhaltiPaymentStatus
+  updateKhaltiPaymentStatus,
 };
