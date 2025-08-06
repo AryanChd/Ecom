@@ -44,6 +44,9 @@ export const orderSchema = new mongoose.Schema({
   pidx: {
     type: String,
   },
+  totalAmount: {
+    type: Number,
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);
