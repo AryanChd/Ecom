@@ -18,6 +18,6 @@ router.get("/getOrderByUser", isLoggedIn, getOrderByUserId);
 
 router.post("/updateOrderStatus/:id", isLoggedIn, isAdmin, updateOrderStatus);
 router.post("/updatePaymentStatus/:id", isLoggedIn, isAdmin, updatePaymentStatus);
-router.post("/updateKhaltiPaymentStatus/:id", isLoggedIn, updateKhaltiPaymentStatus);
+router.post("/updateKhalti", isLoggedIn, updateKhaltiPaymentStatus);
 
 export default router;
