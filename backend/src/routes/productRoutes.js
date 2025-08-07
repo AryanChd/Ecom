@@ -1,4 +1,5 @@
 import express from "express";
+import axios from "axios";
 import {
   createProduct,
   deleteProductById,
@@ -9,6 +10,7 @@ import {
 import { isLoggedIn } from "../middleware/isLoggedin.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { uploads } from "../middleware/cloudinary.js";
+import { gemini } from "../utils/gemini.js";
 
 const router = express.Router();
 
@@ -33,5 +35,20 @@ router.put(
   uploads.single("image"),
   updateProductById
 );
+
+
+router.post('/gemini', async (req, res) => {
+
+
+  const product = {
+    productName: "Nitro v15",
+    brand: "Acer",
+    category: "Laptop"
+  }
+
+  const result = await gemini(product)
+  console.log(result);
+  res.send(result)
+})
 
 export default router;
